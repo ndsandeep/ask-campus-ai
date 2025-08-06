@@ -3,13 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, Send, X, Bot, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { MessageCircle, Send, X, Bot, User, MapPin, Clock, Phone, BookOpen, Users } from "lucide-react";
+import { CampusMap } from "./CampusMap";
+import { SearchBox } from "./SearchBox";
 
 interface Message {
   id: string;
   content: string;
   sender: "user" | "bot";
   timestamp: Date;
+  type?: "text" | "map" | "search" | "quick-actions" | "rich-media";
+  data?: any;
 }
 
 interface ChatBotProps {
@@ -43,40 +48,152 @@ export function ChatBot({ userRole = "visitor" }: ChatBotProps) {
     scrollToBottom();
   }, [messages]);
 
-  const getBotResponse = (userMessage: string): string => {
+  const getBotResponse = (userMessage: string): { content: string; type: string; data?: any } => {
     const message = userMessage.toLowerCase();
     
-    // Sample responses based on common queries
-    if (message.includes("department") || message.includes("course")) {
-      return "Our college offers various departments including Computer Science, Engineering, Business Administration, and Liberal Arts. Each department has specialized programs and excellent faculty. Would you like more information about a specific department?";
-    }
-    
-    if (message.includes("admission") || message.includes("apply")) {
-      return "Admissions are open for the upcoming semester! You can apply online through our portal. We offer undergraduate and graduate programs. The application deadline is approaching. Would you like information about specific admission requirements?";
-    }
-    
-    if (message.includes("fee") || message.includes("cost") || message.includes("tuition")) {
-      return "Our fee structure varies by program. Undergraduate programs start from $15,000 per year, and graduate programs from $20,000 per year. We also offer scholarships and financial aid. Would you like detailed fee information?";
-    }
-    
-    if (message.includes("library") || message.includes("book")) {
-      return "Our library is open Monday-Saturday, 8 AM to 10 PM. We have over 100,000 books, digital resources, and study spaces. Students can borrow books using their student ID. Need help finding specific resources?";
-    }
-    
-    if (message.includes("campus") || message.includes("location") || message.includes("map")) {
-      return "Our campus spans 50 acres with modern facilities including lecture halls, labs, dormitories, cafeteria, sports complex, and parking. I can help you navigate to specific buildings or provide a virtual tour. Where would you like to go?";
-    }
-    
-    if (message.includes("hello") || message.includes("hi") || message.includes("hey")) {
-      return "Hello! Welcome to our college. I'm here to help you with any questions about our campus, programs, or services. What would you like to know?";
-    }
-    
-    if (message.includes("contact") || message.includes("phone") || message.includes("email")) {
-      return "You can reach us at: Phone: (555) 123-4567, Email: info@college.edu. Our admissions office is open Monday-Friday, 9 AM to 5 PM. The main office is located in the Administration Building, Room 101.";
+    // Map/Navigation queries
+    if (message.includes("map") || message.includes("navigate") || message.includes("location") || message.includes("where is") || message.includes("find building")) {
+      return {
+        content: "Here's our interactive campus map! You can click on any building to get more information and directions. I can also help you find specific locations.",
+        type: "map",
+        data: { searchQuery: message.includes("library") ? "library" : message.includes("cafeteria") ? "cafeteria" : "" }
+      };
     }
 
-    // Default response
-    return "I understand you're asking about that topic. While I'm still learning, I'd be happy to connect you with our staff who can provide detailed information. You can also visit our main office or check our website for more resources. Is there anything else I can help you with?";
+    // Search queries
+    if (message.includes("search") || message.includes("find") || message.includes("look for")) {
+      return {
+        content: "I can help you search for departments, services, events, and facilities. What are you looking for?",
+        type: "search"
+      };
+    }
+
+    // Department queries with rich media
+    if (message.includes("department") || message.includes("course")) {
+      return {
+        content: "Our college offers various departments with excellent facilities and faculty. Here are some quick options:",
+        type: "quick-actions",
+        data: {
+          actions: [
+            { text: "Computer Science", icon: "💻", action: "Show CS Department" },
+            { text: "Engineering", icon: "⚙️", action: "Show Engineering" },
+            { text: "Business", icon: "💼", action: "Show Business" },
+            { text: "Liberal Arts", icon: "🎨", action: "Show Liberal Arts" }
+          ]
+        }
+      };
+    }
+    
+    // Admission queries with contextual response
+    if (message.includes("admission") || message.includes("apply")) {
+      const isStudent = userRole === "student";
+      const content = isStudent 
+        ? "As a current student, you might be interested in course registration or transfer procedures. Here's what you can do:"
+        : "Admissions are open for the upcoming semester! You can apply online through our portal. Here's what you need to know:";
+      
+      return {
+        content,
+        type: "rich-media",
+        data: {
+          items: [
+            { title: "Application Deadline", value: "March 15, 2024", icon: "📅" },
+            { title: "Application Fee", value: "$50", icon: "💰" },
+            { title: "Required Documents", value: "Transcripts, Essays, References", icon: "📄" },
+            { title: "Contact Admissions", value: "(555) 123-4567", icon: "📞" }
+          ]
+        }
+      };
+    }
+    
+    // Fee information with structured data
+    if (message.includes("fee") || message.includes("cost") || message.includes("tuition")) {
+      return {
+        content: "Here's our current fee structure. Financial aid and scholarships are available:",
+        type: "rich-media",
+        data: {
+          items: [
+            { title: "Undergraduate Tuition", value: "$15,000/year", icon: "🎓" },
+            { title: "Graduate Tuition", value: "$20,000/year", icon: "📚" },
+            { title: "Room & Board", value: "$8,000/year", icon: "🏠" },
+            { title: "Financial Aid", value: "Available", icon: "💡" }
+          ]
+        }
+      };
+    }
+    
+    // Library with contextual response
+    if (message.includes("library") || message.includes("book")) {
+      const isStudent = userRole === "student";
+      const content = isStudent
+        ? "Welcome back! Here's your library information and current services:"
+        : "Our library offers extensive resources for research and study. Here's what's available:";
+      
+      return {
+        content,
+        type: "rich-media",
+        data: {
+          items: [
+            { title: "Opening Hours", value: "8 AM - 10 PM", icon: "🕒" },
+            { title: "Books Available", value: "100,000+", icon: "📚" },
+            { title: "Study Rooms", value: "25 Available", icon: "🪑" },
+            { title: "Digital Access", value: "24/7 Online", icon: "💻" }
+          ]
+        }
+      };
+    }
+    
+    // Greeting with role-based response
+    if (message.includes("hello") || message.includes("hi") || message.includes("hey")) {
+      const roleGreeting = {
+        student: "Hello! Welcome back to your student portal. I can help you with courses, grades, library access, and more.",
+        visitor: "Hello! Welcome to our college. I'm here to help you explore our campus, departments, and admission information.",
+        admin: "Hello! I can assist you with system management, user analytics, and content updates.",
+        other: "Hello! Welcome to our college. I can provide general information about our campus and services."
+      };
+      
+      return {
+        content: roleGreeting[userRole as keyof typeof roleGreeting] || roleGreeting.other,
+        type: "quick-actions",
+        data: {
+          actions: [
+            { text: "Campus Map", icon: "🗺️", action: "show_map" },
+            { text: "Search", icon: "🔍", action: "show_search" },
+            { text: "Departments", icon: "🏢", action: "show_departments" },
+            { text: "Contact", icon: "📞", action: "show_contact" }
+          ]
+        }
+      };
+    }
+    
+    // Contact information
+    if (message.includes("contact") || message.includes("phone") || message.includes("email")) {
+      return {
+        content: "Here are our contact details and office locations:",
+        type: "rich-media",
+        data: {
+          items: [
+            { title: "Main Office", value: "(555) 123-4567", icon: "📞" },
+            { title: "Email", value: "info@college.edu", icon: "📧" },
+            { title: "Admissions", value: "(555) 123-4568", icon: "🎓" },
+            { title: "Emergency", value: "(555) 911-HELP", icon: "🚨" }
+          ]
+        }
+      };
+    }
+
+    // Default response with helpful actions
+    return {
+      content: "I'm here to help! While I'm still learning about that topic, I can definitely assist you with campus information, directions, and services. What would you like to explore?",
+      type: "quick-actions",
+      data: {
+        actions: [
+          { text: "Show Campus Map", icon: "🗺️", action: "show_map" },
+          { text: "Search Campus", icon: "🔍", action: "show_search" },
+          { text: "Contact Info", icon: "📞", action: "show_contact" },
+          { text: "Ask Different Question", icon: "💭", action: "continue" }
+        ]
+      }
+    };
   };
 
   const sendMessage = async () => {
@@ -95,11 +212,14 @@ export function ChatBot({ userRole = "visitor" }: ChatBotProps) {
 
     // Simulate typing delay
     setTimeout(() => {
+      const response = getBotResponse(userMessage.content);
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: getBotResponse(userMessage.content),
+        content: response.content,
         sender: "bot",
         timestamp: new Date(),
+        type: response.type as any,
+        data: response.data,
       };
       
       setMessages(prev => [...prev, botResponse]);
@@ -111,6 +231,107 @@ export function ChatBot({ userRole = "visitor" }: ChatBotProps) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
+    }
+  };
+
+  const handleQuickAction = (action: string) => {
+    let response: Message;
+    
+    switch (action) {
+      case "show_map":
+        response = {
+          id: Date.now().toString(),
+          content: "Here's our interactive campus map! You can click on buildings for more details.",
+          sender: "bot",
+          timestamp: new Date(),
+          type: "map"
+        };
+        break;
+      case "show_search":
+        response = {
+          id: Date.now().toString(),
+          content: "Use the search below to find departments, services, events, and facilities:",
+          sender: "bot",
+          timestamp: new Date(),
+          type: "search"
+        };
+        break;
+      default:
+        const botResponse = getBotResponse(action);
+        response = {
+          id: Date.now().toString(),
+          content: botResponse.content,
+          sender: "bot",
+          timestamp: new Date(),
+          type: botResponse.type as any,
+          data: botResponse.data
+        };
+    }
+    
+    setMessages(prev => [...prev, response]);
+  };
+
+  const renderMessageContent = (message: Message) => {
+    switch (message.type) {
+      case "map":
+        return (
+          <div className="space-y-3">
+            <p className="text-sm">{message.content}</p>
+            <div className="max-w-sm">
+              <CampusMap searchQuery={message.data?.searchQuery} />
+            </div>
+          </div>
+        );
+      
+      case "search":
+        return (
+          <div className="space-y-3">
+            <p className="text-sm">{message.content}</p>
+            <SearchBox placeholder="Search campus..." />
+          </div>
+        );
+      
+      case "quick-actions":
+        return (
+          <div className="space-y-3">
+            <p className="text-sm">{message.content}</p>
+            <div className="grid grid-cols-2 gap-2">
+              {message.data?.actions?.map((action: any, index: number) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  className="h-auto p-2 text-xs"
+                  onClick={() => handleQuickAction(action.action)}
+                >
+                  <span className="mr-1">{action.icon}</span>
+                  {action.text}
+                </Button>
+              ))}
+            </div>
+          </div>
+        );
+      
+      case "rich-media":
+        return (
+          <div className="space-y-3">
+            <p className="text-sm">{message.content}</p>
+            <div className="space-y-2">
+              {message.data?.items?.map((item: any, index: number) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="text-sm font-medium">{item.title}</span>
+                  </div>
+                  <span className="text-sm text-muted-foreground">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      
+      default:
+        return <p className="text-sm">{message.content}</p>;
     }
   };
 
@@ -159,13 +380,13 @@ export function ChatBot({ userRole = "visitor" }: ChatBotProps) {
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+                  className={`max-w-[80%] rounded-lg px-3 py-2 ${
                     message.sender === "user"
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {message.content}
+                  {renderMessageContent(message)}
                 </div>
                 {message.sender === "user" && (
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent">
