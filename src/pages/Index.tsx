@@ -7,7 +7,8 @@ import { AdminDashboard } from "@/components/AdminDashboard";
 import { OtherDashboard } from "@/components/OtherDashboard";
 import { ChatBot } from "@/components/ChatBot";
 import { GraduationCap, Users, Shield, HelpCircle, Bot, Sparkles } from "lucide-react";
-import heroImage from "@/assets/hero-campus.jpg";
+import heroImage from "@/assets/college-campus.jpg";
+import vvituLogo from "@/assets/vvitu-logo.png";
 
 type UserRole = "student" | "visitor" | "admin" | "other" | null;
 
@@ -104,12 +105,16 @@ const Index = () => {
         
         <div className="relative container mx-auto px-4 py-24">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Bot className="h-12 w-12" />
-              <Sparkles className="h-8 w-8 animate-pulse" />
+            <div className="flex items-center justify-center gap-6 mb-8">
+              <img 
+                src={vvituLogo} 
+                alt="VVITU Logo" 
+                className="h-16 w-auto"
+              />
+              <Sparkles className="h-8 w-8 animate-pulse text-primary-glow" />
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-primary-glow bg-clip-text text-transparent">
-              Campus AI
+              VVITU Campus AI
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90 leading-relaxed">
               Your intelligent campus companion for students, visitors, and staff
