@@ -93,33 +93,28 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground">
+      <section className="relative overflow-hidden text-white">
         <div className="absolute inset-0">
           <img 
             src={heroImage} 
             alt="Campus" 
             className="w-full h-full object-cover opacity-20"
           />
-          <div className="absolute inset-0 bg-gradient-hero/80" />
+          <div className="absolute inset-0 bg-black/60" />
         </div>
         
         <div className="relative container mx-auto px-4 py-24">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-6 mb-8">
-              <img 
-                src={vvituLogo} 
-                alt="VVITU Logo" 
-                className="h-16 w-auto"
-              />
-              <Sparkles className="h-8 w-8 animate-pulse text-primary-glow" />
+            <div className="flex items-center justify-center mb-8">
+              <Sparkles className="h-8 w-8 animate-pulse text-white" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-primary-glow bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
               VVITU Campus AI
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90 leading-relaxed">
+            <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed">
               Your intelligent campus companion for students, visitors, and staff
             </p>
-            <p className="text-lg mb-12 text-primary-foreground/80 max-w-2xl mx-auto">
+            <p className="text-lg mb-12 text-white/80 max-w-2xl mx-auto">
               Experience the future of campus navigation with our AI-powered assistant. 
               Get instant answers, explore facilities, and access personalized services based on your role.
             </p>
