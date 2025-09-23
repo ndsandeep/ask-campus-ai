@@ -98,9 +98,8 @@ const Index = () => {
           <img 
             src={heroImage} 
             alt="Campus" 
-            className="w-full h-full object-cover opacity-20"
+            className="w-full h-full object-contain"
           />
-          <div className="absolute inset-0 bg-black/60" />
         </div>
         
         <div className="relative container mx-auto px-4 py-24">
