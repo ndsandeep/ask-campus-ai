@@ -93,34 +93,35 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
-      <section className="relative overflow-hidden text-white">
+      <section className="relative overflow-hidden text-white min-h-screen">
         <div className="absolute inset-0">
           <img 
             src={heroImage} 
-            alt="Campus" 
-            className="w-full h-full object-contain"
+            alt="VVITU Campus" 
+            className="w-full h-full object-cover"
           />
+          <div className="absolute inset-0 bg-black/50" />
         </div>
         
-        <div className="relative container mx-auto px-4 py-24">
+        <div className="relative container mx-auto px-4 py-24 min-h-screen flex items-center">
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center mb-8">
-              <Sparkles className="h-8 w-8 animate-pulse text-white" />
+              <Sparkles className="h-8 w-8 animate-pulse text-white drop-shadow-lg" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white drop-shadow-lg">
               VVITU Campus AI
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed">
+            <p className="text-xl md:text-2xl mb-8 text-white/95 leading-relaxed drop-shadow-md">
               Your intelligent campus companion for students, visitors, and staff
             </p>
-            <p className="text-lg mb-12 text-white/80 max-w-2xl mx-auto">
+            <p className="text-lg mb-12 text-white/90 max-w-2xl mx-auto drop-shadow-md">
               Experience the future of campus navigation with our AI-powered assistant. 
               Get instant answers, explore facilities, and access personalized services based on your role.
             </p>
             <Button 
               size="lg" 
               variant="hero"
-              className="text-lg px-8 py-6 h-auto"
+              className="text-lg px-8 py-6 h-auto shadow-lg"
               onClick={() => document.getElementById('role-selection')?.scrollIntoView({ behavior: 'smooth' })}
             >
               Get Started
