@@ -26,7 +26,7 @@ export function ChatBot({ userRole = "visitor" }: ChatBotProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      content: `Hello! I'm your campus AI assistant. I can help you with information about our college. How can I assist you today?`,
+      content: `Hello! I'm your VVITU Campus AI assistant. I can help you with directions to college, admissions, facilities, placements, and much more about VVITU. How can I assist you today?`,
       sender: "bot",
       timestamp: new Date(),
     },
@@ -51,10 +51,28 @@ export function ChatBot({ userRole = "visitor" }: ChatBotProps) {
   const getBotResponse = (userMessage: string): { content: string; type: string; data?: any } => {
     const message = userMessage.toLowerCase();
     
-    // Map/Navigation queries
-    if (message.includes("map") || message.includes("navigate") || message.includes("location") || message.includes("where is") || message.includes("find building")) {
+    // Directions to VVITU College
+    if (message.includes("direction") || message.includes("how to reach") || message.includes("location") || message.includes("address")) {
       return {
-        content: "Here's our interactive campus map! You can click on any building to get more information and directions. I can also help you find specific locations.",
+        content: "Here are the directions to reach VVITU College:",
+        type: "rich-media",
+        data: {
+          items: [
+            { title: "Address", value: "VVITU Campus, Education City, Tamil Nadu", icon: "📍" },
+            { title: "By Bus", value: "Take Bus Route 45A, 67B from Central Station", icon: "🚌" },
+            { title: "By Train", value: "Nearest Railway Station: City Junction (5km)", icon: "🚂" },
+            { title: "By Car", value: "Take NH-44, Exit at VVITU Junction", icon: "🚗" },
+            { title: "Landmarks", value: "Near City Mall & Tech Park", icon: "🏢" },
+            { title: "GPS Coordinates", value: "11.0168° N, 76.9558° E", icon: "🗺️" }
+          ]
+        }
+      };
+    }
+
+    // Map/Navigation queries
+    if (message.includes("map") || message.includes("navigate") || message.includes("where is") || message.includes("find building")) {
+      return {
+        content: "Here's our interactive VVITU campus map! You can click on any building to get more information and directions.",
         type: "map",
         data: { searchQuery: message.includes("library") ? "library" : message.includes("cafeteria") ? "cafeteria" : "" }
       };
@@ -63,80 +81,142 @@ export function ChatBot({ userRole = "visitor" }: ChatBotProps) {
     // Search queries
     if (message.includes("search") || message.includes("find") || message.includes("look for")) {
       return {
-        content: "I can help you search for departments, services, events, and facilities. What are you looking for?",
+        content: "I can help you search for departments, services, events, and facilities at VVITU. What are you looking for?",
         type: "search"
       };
     }
 
-    // Department queries with rich media
-    if (message.includes("department") || message.includes("course")) {
+    // VVITU Department queries
+    if (message.includes("department") || message.includes("course") || message.includes("branch")) {
       return {
-        content: "Our college offers various departments with excellent facilities and faculty. Here are some quick options:",
+        content: "VVITU offers excellent departments with state-of-the-art facilities. Here are our main departments:",
         type: "quick-actions",
         data: {
           actions: [
-            { text: "Computer Science", icon: "💻", action: "Show CS Department" },
-            { text: "Engineering", icon: "⚙️", action: "Show Engineering" },
-            { text: "Business", icon: "💼", action: "Show Business" },
-            { text: "Liberal Arts", icon: "🎨", action: "Show Liberal Arts" }
+            { text: "Computer Science & Engineering", icon: "💻", action: "Show CSE Department" },
+            { text: "Electronics & Communication", icon: "📡", action: "Show ECE Department" },
+            { text: "Mechanical Engineering", icon: "⚙️", action: "Show Mechanical" },
+            { text: "Civil Engineering", icon: "🏗️", action: "Show Civil" },
+            { text: "Information Technology", icon: "🌐", action: "Show IT Department" },
+            { text: "MBA", icon: "💼", action: "Show MBA" }
           ]
         }
       };
     }
     
-    // Admission queries with contextual response
-    if (message.includes("admission") || message.includes("apply")) {
+    // VVITU Admission queries
+    if (message.includes("admission") || message.includes("apply") || message.includes("eligibility")) {
       const isStudent = userRole === "student";
       const content = isStudent 
-        ? "As a current student, you might be interested in course registration or transfer procedures. Here's what you can do:"
-        : "Admissions are open for the upcoming semester! You can apply online through our portal. Here's what you need to know:";
+        ? "As a current VVITU student, here's information about course registration and academic procedures:"
+        : "Welcome to VVITU Admissions! Here's everything you need to know about joining our institution:";
       
       return {
         content,
         type: "rich-media",
         data: {
           items: [
-            { title: "Application Deadline", value: "March 15, 2024", icon: "📅" },
-            { title: "Application Fee", value: "$50", icon: "💰" },
-            { title: "Required Documents", value: "Transcripts, Essays, References", icon: "📄" },
-            { title: "Contact Admissions", value: "(555) 123-4567", icon: "📞" }
+            { title: "Application Period", value: "June 1 - July 31, 2024", icon: "📅" },
+            { title: "Entrance Exam", value: "TNEA / JEE Main / VVITU Entrance", icon: "📝" },
+            { title: "Application Fee", value: "₹1,200 (General) / ₹600 (SC/ST)", icon: "💰" },
+            { title: "Eligibility", value: "12th with 60% in PCM", icon: "🎓" },
+            { title: "Seats Available", value: "1,200+ across all branches", icon: "🪑" },
+            { title: "Admissions Office", value: "+91-422-2123456", icon: "📞" }
           ]
         }
       };
     }
     
-    // Fee information with structured data
-    if (message.includes("fee") || message.includes("cost") || message.includes("tuition")) {
+    // VVITU Fee information
+    if (message.includes("fee") || message.includes("cost") || message.includes("tuition") || message.includes("fees")) {
       return {
-        content: "Here's our current fee structure. Financial aid and scholarships are available:",
+        content: "Here's VVITU's current fee structure. Scholarships and financial assistance are available:",
         type: "rich-media",
         data: {
           items: [
-            { title: "Undergraduate Tuition", value: "$15,000/year", icon: "🎓" },
-            { title: "Graduate Tuition", value: "$20,000/year", icon: "📚" },
-            { title: "Room & Board", value: "$8,000/year", icon: "🏠" },
-            { title: "Financial Aid", value: "Available", icon: "💡" }
+            { title: "B.Tech Annual Fee", value: "₹1,25,000", icon: "🎓" },
+            { title: "MBA Annual Fee", value: "₹2,50,000", icon: "📚" },
+            { title: "Hostel Fee", value: "₹80,000/year", icon: "🏠" },
+            { title: "Mess Fee", value: "₹45,000/year", icon: "🍽️" },
+            { title: "Library Fee", value: "₹5,000/year", icon: "📖" },
+            { title: "Scholarships", value: "Merit & Need Based", icon: "💡" }
+          ]
+        }
+      };
+    }
+
+    // VVITU Facilities
+    if (message.includes("facilities") || message.includes("amenities") || message.includes("infrastructure")) {
+      return {
+        content: "VVITU provides world-class facilities for holistic development:",
+        type: "rich-media",
+        data: {
+          items: [
+            { title: "Central Library", value: "2 Lakh+ Books, Digital Resources", icon: "📚" },
+            { title: "Laboratories", value: "State-of-art Research Labs", icon: "🔬" },
+            { title: "Sports Complex", value: "Indoor & Outdoor Facilities", icon: "🏃" },
+            { title: "Hostels", value: "Separate Boys & Girls Hostels", icon: "🏠" },
+            { title: "Medical Center", value: "24/7 Healthcare Facility", icon: "🏥" },
+            { title: "WiFi Campus", value: "High-Speed Internet", icon: "📶" }
+          ]
+        }
+      };
+    }
+
+    // VVITU Placements
+    if (message.includes("placement") || message.includes("job") || message.includes("career") || message.includes("companies")) {
+      return {
+        content: "VVITU has an excellent placement record with top companies visiting our campus:",
+        type: "rich-media",
+        data: {
+          items: [
+            { title: "Placement Rate", value: "95% (2023-24)", icon: "📈" },
+            { title: "Highest Package", value: "₹45 LPA", icon: "💰" },
+            { title: "Average Package", value: "₹8.5 LPA", icon: "💵" },
+            { title: "Top Recruiters", value: "TCS, Infosys, Wipro, Cognizant", icon: "🏢" },
+            { title: "Core Companies", value: "L&T, Ashok Leyland, TVS", icon: "⚙️" },
+            { title: "Training Programs", value: "Skill Development & Aptitude", icon: "🎯" }
           ]
         }
       };
     }
     
-    // Library with contextual response
+    // VVITU Library with contextual response
     if (message.includes("library") || message.includes("book")) {
       const isStudent = userRole === "student";
       const content = isStudent
-        ? "Welcome back! Here's your library information and current services:"
-        : "Our library offers extensive resources for research and study. Here's what's available:";
+        ? "Welcome back to VVITU Central Library! Here's your library information:"
+        : "VVITU Central Library offers extensive resources for research and study:";
       
       return {
         content,
         type: "rich-media",
         data: {
           items: [
-            { title: "Opening Hours", value: "8 AM - 10 PM", icon: "🕒" },
-            { title: "Books Available", value: "100,000+", icon: "📚" },
-            { title: "Study Rooms", value: "25 Available", icon: "🪑" },
-            { title: "Digital Access", value: "24/7 Online", icon: "💻" }
+            { title: "Opening Hours", value: "7 AM - 11 PM (Mon-Sat)", icon: "🕒" },
+            { title: "Collection", value: "2 Lakh+ Books & Journals", icon: "📚" },
+            { title: "Digital Library", value: "IEEE, ACM, Springer Access", icon: "💻" },
+            { title: "Study Spaces", value: "Individual & Group Study Rooms", icon: "🪑" },
+            { title: "Research Facilities", value: "PhD & M.Tech Research Support", icon: "🔬" },
+            { title: "E-Resources", value: "24/7 Online Access", icon: "🌐" }
+          ]
+        }
+      };
+    }
+
+    // VVITU About/History
+    if (message.includes("about") || message.includes("history") || message.includes("vvitu") || message.includes("college info")) {
+      return {
+        content: "VVITU (Vellore Vishvakarma Institute of Technology University) - Excellence in Technical Education:",
+        type: "rich-media",
+        data: {
+          items: [
+            { title: "Established", value: "1984 (40 Years of Excellence)", icon: "🏛️" },
+            { title: "Accreditation", value: "NAAC A++ Grade, NBA Accredited", icon: "🏆" },
+            { title: "Ranking", value: "NIRF Ranked Engineering College", icon: "📊" },
+            { title: "Student Strength", value: "8,000+ Students", icon: "👥" },
+            { title: "Faculty", value: "500+ Qualified Faculty", icon: "👨‍🏫" },
+            { title: "Vision", value: "Global Technology Leadership", icon: "🌟" }
           ]
         }
       };
@@ -165,17 +245,19 @@ export function ChatBot({ userRole = "visitor" }: ChatBotProps) {
       };
     }
     
-    // Contact information
-    if (message.includes("contact") || message.includes("phone") || message.includes("email")) {
+    // VVITU Contact information
+    if (message.includes("contact") || message.includes("phone") || message.includes("email") || message.includes("helpline")) {
       return {
-        content: "Here are our contact details and office locations:",
+        content: "Here are VVITU's contact details and important numbers:",
         type: "rich-media",
         data: {
           items: [
-            { title: "Main Office", value: "(555) 123-4567", icon: "📞" },
-            { title: "Email", value: "info@college.edu", icon: "📧" },
-            { title: "Admissions", value: "(555) 123-4568", icon: "🎓" },
-            { title: "Emergency", value: "(555) 911-HELP", icon: "🚨" }
+            { title: "Main Office", value: "+91-422-2123456", icon: "📞" },
+            { title: "Email", value: "info@vvitu.ac.in", icon: "📧" },
+            { title: "Admissions", value: "+91-422-2123457", icon: "🎓" },
+            { title: "Placement Cell", value: "+91-422-2123458", icon: "💼" },
+            { title: "Student Helpline", value: "+91-422-2123459", icon: "🆘" },
+            { title: "Emergency", value: "108 / Campus Security: 100", icon: "🚨" }
           ]
         }
       };
